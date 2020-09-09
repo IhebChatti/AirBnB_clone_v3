@@ -103,14 +103,15 @@ def PutPlace(place_id=None):
         [status/json]: [json file and 200 status on success, 400 on failure]
     """
     updated_place = storage.get("Place", place_id)
-    if updated_place is None:
-        abort(400)
-    req = request.get_json()
-    if req is None:
-        abort(400, "Not a JSON")
-    for k, v in req.items():
-        if k in ['id', 'user_id', 'city_id', 'created_at', 'updated_at']:
-            pass
-        setattr(updated_place, k, v)
-    storage.save()
-    return jsonify(updated_place.to_dict())
+    if updated_place:
+        req = request.get_json()
+        if req is None:
+            abort(400, "Not a JSON")
+        for k, v in req.items():
+            if k in ['id', 'user_id', 'city_id', 'created_at',
+                     'updated_at']:
+                pass
+            setattr(updated_place, k, v)
+        storage.save()
+        return jsonify(updated_place.to_dict())
+    abort(404)
