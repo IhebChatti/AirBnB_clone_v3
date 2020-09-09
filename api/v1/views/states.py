@@ -72,7 +72,6 @@ def PostState():
         abort(400, "Missing name")
     else:
         new_state = State(**req)
-        storage.new(new_state)
         storage.save()
         return jsonify(new_state.to_dict()), 201
 
