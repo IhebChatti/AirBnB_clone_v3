@@ -15,15 +15,16 @@ def status():
     """
     return jsonify({"status": "ok"})
 
+
 @app_views.route('/stats', methods=['GET'], strict_slashes=False)
 def render_stats():
     """Returns stats about classes"""
     stats = {
-      "amenities": storage.count('Amenity'), 
-      "cities": storage.count('City'), 
-      "places": storage.count('Place'), 
-      "reviews": storage.count('Review'), 
-      "states": storage.count('State'), 
+      "amenities": storage.count('Amenity'),
+      "cities": storage.count('City'),
+      "places": storage.count('Place'),
+      "reviews": storage.count('Review'),
+      "states": storage.count('State'),
       "users": storage.count('User')
     }
     return jsonify(stats)

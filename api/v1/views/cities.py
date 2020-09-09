@@ -52,7 +52,7 @@ def create_city(state_id):
         content['state_id'] = state.id
         if not content:
             abort(400, "Not a JSON")
-        if not 'name' in content:
+        if 'name' not in content:
             abort(400, "missing name")
         city = City(**content)
         storage.new(city)
