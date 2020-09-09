@@ -74,7 +74,7 @@ def PostState():
         new_state = State(**req)
         storage.new(new_state)
         storage.save()
-        return jsonify(new_state.to_dict())
+        return jsonify(new_state.to_dict()), 201
 
 
 @app_views.route('/states/<state_id>', methods=['PUT'], strict_slashes=False)
