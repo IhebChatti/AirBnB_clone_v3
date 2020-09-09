@@ -90,14 +90,14 @@ def PutAmenity(amenity_id=None):
         [status/json]: [json file and 200 status on success, 400 on failure]
     """
     updated_amenity = storage.get("Amenity", amenity_id)
-    if updated_amenity is None:
-        abort(400)
-    req = request.get_json()
-    if req is None:
-        abort(400, "Not a JSON")
-    for k, v in req.items():
-        if k in ['id', 'created_at', 'updated_at']:
-            pass
-        setattr(updated_amenity, k, v)
-    storage.save()
-    return jsonify(updated_amenity.to_dict())
+    if updated_amenity:
+        req = request.get_json()
+        if req is None:
+            abort(400, "Not a JSON")
+        for k, v in req.items():
+            if k in ['id', 'created_at', 'updated_at']:
+                pass
+            setattr(updated_amenity, k, v)
+        storage.save()
+        return jsonify(updated_amenity.to_dict())
+    abort(404)
