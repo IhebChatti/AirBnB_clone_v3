@@ -14,10 +14,11 @@ def RetrieveAllAmenities():
     Returns:
         [json]: [list of all amenity objects]
     """
-    amenities = storage.all("Amenity").values()
-    if amenities:
-        return jsonify([amenity.to_dict() for amenity in amenities])
-    abort(404)
+    objs = []
+    amenity_values = storage.all("Amenity").values()
+    for obj in amenity_values:
+        objs.append(obj.to_dict())
+    return jsonify(objs)
 
 
 @app_views.route('/amenities/<amenity_id>', strict_slashes=False)
@@ -30,11 +31,12 @@ def RetrieveAmenityObject(amenity_id):
     Returns:
         [json]: [json rep of amenity on success, 404 on failure]
     """
-    objs = []
-    amenity_value = storage.all("Amenity").values()
-    for obj in amenity_value:
-        objs.append(obj.to_dict())
-    return jsonify(objs)
+    amenity_values = storage.all("Amenity").values()
+    if amenity_id is not None:
+        for obj in amenity_values:
+            if obj.id == amenity_id:
+                return jsonify(obj.to_dict())
+    abort(404)
 
 
 @app_views.route('/amenities/<amenity_id>', methods=['DELETE'],
@@ -66,12 +68,13 @@ def PostAmenity():
     req = request.get_json()
     if req is None:
         abort(400, "Not a JSON")
-    if "name" not in req:
+    elif "name" not in req.keys():
         abort(400, "Missing name")
-    new_amenity = Amenity(**req)
-    storage.new(new_amenity)
-    storage.save()
-    return jsonify(new_amenity.to_dict()), 201
+    else:
+        new_amenity = Amenity(**req)
+        storage.new(new_amenity)
+        storage.save()
+        return jsonify(new_amenity.to_dict()), 201
 
 
 @app_views.route('/amenities/<amenity_id>',
@@ -87,14 +90,14 @@ def PutAmenity(amenity_id=None):
         [status/json]: [json file and 200 status on success, 400 on failure]
     """
     updated_amenity = storage.get("Amenity", amenity_id)
-    if updated_amenity:
-        req = request.get_json()
-        if req is None:
-            abort(400, "Not a JSON")
-        for k, v in req.items():
-            if k in ['id', 'created_at', 'updated_at']:
-                pass
-            setattr(updated_amenity, k, v)
-        storage.save()
-        return jsonify(updated_amenity.to_dict())
-    abort(404)
+    if updated_amenity is None:
+        abort(400)
+    req = request.get_json()
+    if req is None:
+        abort(400, "Not a JSON")
+    for k, v in req.items():
+        if k in ['id', 'created_at', 'updated_at']:
+            pass
+        setattr(updated_amenity, k, v)
+    storage.save()
+    return jsonify(updated_amenity.to_dict())
