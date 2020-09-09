@@ -7,7 +7,9 @@ from flask import Flask, jsonify, abort, request
 from models.place import Place
 
 
-@app_views.route('/cities/<city_id>/places', strict_slashes=False)
+@app_views.route('/cities/<city_id>/places',
+                 methods=['GET'],
+                 strict_slashes=False)
 def RetrieveAllPlaces(city_id=None):
     """[RetrieveAllPlaces method]
 
@@ -16,11 +18,13 @@ def RetrieveAllPlaces(city_id=None):
     """
     city = storage.get("City", city_id)
     if city:
-        return jsonify([amenity.to_dict() for amenity in city.places])
+        return jsonify([place.to_dict() for place in city.places])
     abort(404)
 
 
-@app_views.route('/places/<place_id>', strict_slashes=False)
+@app_views.route('/places/<place_id>',
+                 methods=['GET'],
+                 strict_slashes=False)
 def RetrievePlaceObject(place_id):
     """[RetrievePlaceObject method]
 
@@ -38,7 +42,8 @@ def RetrievePlaceObject(place_id):
     abort(404)
 
 
-@app_views.route('/places/<place_id>', methods=['DELETE'],
+@app_views.route('/places/<place_id>',
+                 methods=['DELETE'],
                  strict_slashes=False)
 def DeletePlace(place_id):
     """[delete request]
