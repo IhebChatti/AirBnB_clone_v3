@@ -12,7 +12,10 @@ def render_cities_by_state(state_id):
     """GET /states/:state_id/cities"""
     state = storage.get("State", state_id)
     if state:
-        return jsonify([city.to_dict() for city in state.cities])
+        cities = [city.to_dict() for city in state.cities]
+        if len(cities) == 0:
+            abort(404)
+        return jsonify(cities)
     abort(404)
 
 
