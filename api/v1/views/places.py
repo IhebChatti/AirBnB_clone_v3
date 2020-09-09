@@ -60,8 +60,8 @@ def DeletePlace(place_id):
 @app_views.route('/cities/<city_id>/places',
                  methods=['POST'],
                  strict_slashes=False)
-def PostUser():
-    """[post user method]
+def PostPlace(city_id):
+    """[post place method]
 
     Returns:
         [status/json]: [json file and 200 status on success, 400 on failure]
