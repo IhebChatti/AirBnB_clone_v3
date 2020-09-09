@@ -69,7 +69,7 @@ def PostState():
     if req is None:
         abort(400, "Not a JSON")
     elif "name" not in req.keys():
-        abort(400, "missing name")
+        abort(400, "Missing name")
     else:
         new_state = State(**req)
         storage.new(new_state)
