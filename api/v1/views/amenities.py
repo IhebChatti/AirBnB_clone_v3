@@ -14,11 +14,10 @@ def RetrieveAllAmenities():
     Returns:
         [json]: [list of all amenity objects]
     """
-    objs = []
-    amenity_values = storage.all("Amenity").values()
-    for obj in amenity_values:
-        objs.append(obj.to_dict())
-    return jsonify(objs)
+    amenities = storage.all("Amenity").values()
+    if amenities or len(amenities):
+        return jsonify([amenity.to_dict() for amenity in amenities])
+    abort(404)
 
 
 @app_views.route('/amenities/<amenity_id>', strict_slashes=False)
