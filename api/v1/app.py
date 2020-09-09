@@ -22,4 +22,6 @@ def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
 
 if __name__ == "__main__":
-    app.run(getenv('HBNB_API_HOST'), getenv('HBNB_API_PORT'), threaded=True)
+    app.run(getenv('HBNB_API_HOST', default='0.0.0.0'),
+            int(getenv('HBNB_API_PORT', default=5000)),
+            threaded=True)
