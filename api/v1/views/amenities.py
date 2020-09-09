@@ -101,3 +101,4 @@ def PutAmenity(amenity_id=None):
         storage.save()
         return jsonify(updated_amenity.to_dict())
     abort(404)
+    
