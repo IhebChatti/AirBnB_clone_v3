@@ -65,19 +65,19 @@ def PostState():
     Returns:
         [status/json]: [json file and 200 status on success, 400 on failure]
     """
-    req = request.get_json()
-    if req is None:
+    content = request.get_json()
+    if not content:
         abort(400, "Not a JSON")
-    elif "name" not in req.keys():
+    if "name" not in content:
         abort(400, "Missing name")
-    else:
-        new_state = State(**req)
-        storage.save()
-        return jsonify(new_state.to_dict()), 201
+    state = State(**req)
+    storage.new(state)
+    storage.save()
+    return jsonify(state.to_dict()), 201
 
 
 @app_views.route('/states/<state_id>', methods=['PUT'], strict_slashes=False)
-def PutState(state_id=None):
+def PutState(state_id):
     """[PUT state method]
 
     Args:
@@ -87,14 +87,14 @@ def PutState(state_id=None):
         [status/json]: [json file and 200 status on success, 400 on failure]
     """
     updated_state = storage.get("State", state_id)
-    if updated_state is None:
-        abort(400)
-    req = request.get_json()
-    if req is None:
-        abort(400, "Not a JSON")
-    for k, v in req.items():
-        if k in ['id', 'created_at', 'updated_at']:
-            pass
-        setattr(updated_state, k, v)
-    storage.save()
-    return jsonify(updated_state.to_dict())
+    if updated_state:
+        req = request.get_json()
+        if req is None:
+            abort(400, "Not a JSON")
+        for k, v in req.items():
+            if k in ['id', 'created_at', 'updated_at']:
+                pass
+            setattr(updated_state, k, v)
+        storage.save()
+        return jsonify(updated_state.to_dict())
+    abort(404)
