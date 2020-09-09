@@ -66,14 +66,15 @@ def PostState():
         [status/json]: [json file and 200 status on success, 400 on failure]
     """
     content = request.get_json()
-    if not content:
+    if content is None:
         abort(400, "Not a JSON")
-    if "name" not in content:
+    elif "name" not in req.keys():
         abort(400, "Missing name")
-    state = State(**req)
-    storage.new(state)
-    storage.save()
-    return jsonify(state.to_dict()), 201
+    else:
+        state = State(**req)
+        storage.new(state)
+        storage.save()
+        return jsonify(state.to_dict()), 201
 
 
 @app_views.route('/states/<state_id>', methods=['PUT'], strict_slashes=False)
