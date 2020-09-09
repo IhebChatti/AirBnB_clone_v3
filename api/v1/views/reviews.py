@@ -10,7 +10,7 @@ from flask import Flask, jsonify, abort, request
                  methods=['GET'])
 def render_reviews_by_place(place_id):
     """GET /places/:place_id/reviews"""
-    place = storage.get("Place", state_id)
+    place = storage.get("Place", place_id)
     if place:
         return jsonify([review.to_dict() for review in place.reviews])
     abort(404)
@@ -49,16 +49,18 @@ def create_review(place_id):
     place = storage.get("Place", place_id)
     if place:
         content = request.get_json()
-        content['place_id'] = place.id
         if not content:
             abort(400, "Not a JSON")
         if 'user_id' not in content:
             abort(400, "Missing user_id")
-        if not storage.get("User", user_id):
+        user = storage.get("User", content['user_id'])
+        if not user:
             abort(404)
         if 'text' not in content:
             abort(400, "Missing text")
+        content['place_id'] = place.id
         review = Review(**content)
+        storage.new(review)
         storage.save()
         return jsonify(review.to_dict()), 201
     abort(404)
