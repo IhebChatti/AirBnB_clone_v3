@@ -77,7 +77,8 @@ def update_review(review_id):
         if content is None:
             abort(400, "Not a JSON")
         for key, value in content.items():
-            if key in ['id', 'place_id', 'user_id', 'created_at', 'updated_at']:
+            if key in ['id', 'place_id', 'user_id', 'created_at',
+                       'updated_at']:
                 pass
             setattr(review, key, value)
         storage.save()
