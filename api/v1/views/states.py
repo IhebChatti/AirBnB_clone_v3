@@ -65,7 +65,7 @@ def PostState():
     Returns:
         [status/json]: [json file and 200 status on success, 400 on failure]
     """
-    req = request.get_json(silent=True)
+    req = request.get_json()
     if req is None:
         abort(400, "Not a JSON")
     elif "name" not in req.keys():
@@ -90,7 +90,7 @@ def PutState(state_id=None):
     updated_state = storage.get("State", state_id)
     if updated_state is None:
         abort(400)
-    req = request.get_json(silent=True)
+    req = request.get_json()
     if req is None:
         abort(400, "Not a JSON")
     for k, v in req.items():
