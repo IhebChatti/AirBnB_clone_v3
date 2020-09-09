@@ -71,17 +71,20 @@ def PostPlace(city_id):
     Returns:
         [status/json]: [json file and 200 status on success, 400 on failure]
     """
-    from models.city import City
+    from models.place import Place
     city = storage.get("City", city_id)
     if city:
         content = request.get_json()
-        content['city_id'] = city.id
         if not content:
             abort(400, "Not a JSON")
         if 'user_id' not in content:
             abort(400, "Missing user_id")
+        user = storage.get("User", content['user_id'])
+        if not user:
+            abort(404)
         if 'name' not in content:
             abort(400, "Missing name")
+        content['city_id'] = city.id
         place = Place(**content)
         storage.new(place)
         storage.save()

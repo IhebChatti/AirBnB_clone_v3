@@ -4,6 +4,7 @@
 from api.v1.views import app_views
 from models import storage
 from flask import Flask, jsonify, abort, request
+from models.state import State
 
 
 @app_views.route('/states', strict_slashes=False)
@@ -64,7 +65,6 @@ def PostState():
     Returns:
         [status/json]: [json file and 200 status on success, 400 on failure]
     """
-    from models import State
     content = request.get_json()
     if not content:
         abort(400, "Not a JSON")
