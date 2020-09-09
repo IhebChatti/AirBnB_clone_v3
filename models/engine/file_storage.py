@@ -78,9 +78,10 @@ class FileStorage:
         Returns:
             [type]: [description]
         """
-        if id is not None:
+        if id:
             for obj in self.all(cls).values():
-                return obj
+                if obj.id == id:
+                    return obj
         return None
 
     def count(self, cls=None):
@@ -89,6 +90,6 @@ class FileStorage:
         Args:
             cls ([obj], optional): [class name to be counted] Defaults to None.
         """
-        if cls is not None:
+        if cls:
             return len(self.all(cls))
         return len(self.all())
