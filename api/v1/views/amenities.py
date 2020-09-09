@@ -30,10 +30,11 @@ def RetrieveAmenityObject(amenity_id):
     Returns:
         [json]: [json rep of amenity on success, 404 on failure]
     """
-    amenity = storage.get("Amenity", amenity_id)
-    if amenity:
-        return jsonify(amenity.to_dict())
-    abort(404)
+    objs = []
+    amenity_value = storage.all("Amenity").values()
+    for obj in amenity_value:
+        objs.append(obj.to_dict())
+    return jsonify(objs)
 
 
 @app_views.route('/amenities/<amenity_id>', methods=['DELETE'],
