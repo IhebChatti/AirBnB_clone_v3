@@ -9,7 +9,23 @@ from flask import Flask, jsonify, abort, request
                  strict_slashes=False,
                  methods=['GET'])
 def render_reviews_by_place(place_id):
-    """GET /places/:place_id/reviews"""
+    """GET /places/:place_id/reviews
+    ---
+    parameters:
+      - name: place_id
+        in: path
+        type: string
+        required: true
+        default: all
+    definitions:
+      Reviews:
+        type: object
+    responses:
+      200:
+        description: A list of reviews by places
+        schema:
+          $ref: '#/definitions/Reviews'
+    """
     place = storage.get("Place", place_id)
     if place:
         return jsonify([review.to_dict() for review in place.reviews])
