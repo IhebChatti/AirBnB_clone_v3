@@ -9,27 +9,42 @@ from models.state import State
 
 @app_views.route('/states', strict_slashes=False)
 def RetrieveAllStates():
-    """[RetrieveAllStates method]
-
-    Returns:
-        [json]: [list of all State objects]
+    """GET /states
+    ---
+    definitions:
+      States:
+        type: object
+    responses:
+      200:
+        description: A list of states
+        schema:
+          $ref: '#/definitions/States'
     """
     objs = []
     states_values = storage.all("State").values()
     for obj in states_values:
         objs.append(obj.to_dict())
-    return jsonify(objs)
+    return jsonify(objs)    
 
 
 @app_views.route('/states/<state_id>', strict_slashes=False)
 def RetrieveStateObject(state_id):
-    """[RetrieveState method]
-
-    Args:
-        state_id ([str]): [state id]
-
-    Returns:
-        [json]: [json rep of state on success, 404 on failure]
+    """GET /states/:state_id
+    ---
+    parameters:
+      - name: state_id
+        in: path
+        type: string
+        required: true
+        default: all
+    definitions:
+      State:
+        type: object
+    responses:
+      200:
+        description: A state by ID
+        schema:
+          $ref: '#/definitions/State'
     """
     states_values = storage.all("State").values()
     if state_id is not None:
@@ -42,13 +57,18 @@ def RetrieveStateObject(state_id):
 @app_views.route('/states/<state_id>', methods=['DELETE'],
                  strict_slashes=False)
 def DeleteState(state_id):
-    """[delete request]
-
-    Args:
-        state_id ([str]): [state id]
-
-    Returns:
-        [json]: [200 on success or 404 status on failure]
+    """DELETE /states/:state_id
+    ---
+    delete:
+        parameters:
+          - name: state_id
+            in: path
+            type: string
+            required: true
+            default: all
+    responses:
+      200:
+        description: Delete a state
     """
     deleted_state = storage.get("State", state_id)
     if deleted_state:
