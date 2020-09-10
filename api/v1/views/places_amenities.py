@@ -12,13 +12,22 @@ from models.place import Place
 
 @app_views.route('/places/<place_id>/amenities', strict_slashes=False)
 def GetAmenityOfPlace(place_id):
-    """[GetAmenityOfPlace method]
-
-    Args:
-        place_id ([str]): [place id]
-
-    Returns:
-        [json/status]: [json and 200 on success, 404 on failure]
+    """GET /places/:place_id/amenities
+    ---
+    parameters:
+      - name: place_id
+        in: path
+        type: string
+        required: true
+        default: all
+    definitions:
+      Amenities:
+        type: object
+    responses:
+      200:
+        description: A list of amenities by places
+        schema:
+          $ref: '#/definitions/Amenities'
     """
     place = storage.get("Place", place_id)
     if place:
