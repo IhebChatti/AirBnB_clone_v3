@@ -68,10 +68,11 @@ class BaseModel:
             new_dict["updated_at"] = new_dict["updated_at"].strftime(time)
         new_dict["__class__"] = self.__class__.__name__
         if "password" in new_dict:
-            password = new_dict['password'].encode()
-            new_dict['password'] = hashlib.md5(password).hexdigest()
             if getenv('HBNB_TYPE_STORAGE') == "db":
                 del new_dict['password']
+        else:
+            password = new_dict['password'].encode()
+            new_dict['password'] = hashlib.md5(password).hexdigest()
         if "_sa_instance_state" in new_dict:
             del new_dict["_sa_instance_state"]
         return new_dict
