@@ -9,10 +9,16 @@ from models.user import User
 
 @app_views.route('/users', strict_slashes=False)
 def RetrieveAllUsers():
-    """[RetrieveAllUsers method]
-
-    Returns:
-        [json]: [list of all User objects]
+    """GET /users
+    ---
+    definitions:
+      Users:
+        type: object
+    responses:
+      200:
+        description: A list of users
+        schema:
+          $ref: '#/definitions/Users'
     """
     objs = []
     users_values = storage.all("User").values()
