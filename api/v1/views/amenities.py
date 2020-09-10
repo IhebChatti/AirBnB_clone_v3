@@ -9,10 +9,16 @@ from models.amenity import Amenity
 
 @app_views.route('/amenities', strict_slashes=False)
 def RetrieveAllAmenities():
-    """[RetrieveAllAmenities method]
-
-    Returns:
-        [json]: [list of all amenity objects]
+    """GET /amenities
+    ---
+    definitions:
+      Amenities:
+        type: object
+    responses:
+      200:
+        description: A list of amenities
+        schema:
+          $ref: '#/definitions/Amenities'
     """
     objs = []
     amenity_values = storage.all("Amenity").values()
@@ -42,13 +48,18 @@ def RetrieveAmenityObject(amenity_id):
 @app_views.route('/amenities/<amenity_id>', methods=['DELETE'],
                  strict_slashes=False)
 def DeleteAmenity(amenity_id):
-    """[delete request]
-
-    Args:
-        amenity_id ([str]): [amenity id]
-
-    Returns:
-        [json]: [200 on success or 404 status on failure]
+    """DELETE /amenities/:amenity_id
+    ---
+    delete:
+        parameters:
+          - name: amenity_id
+            in: path
+            type: string
+            required: true
+            default: all
+    responses:
+      200:
+        description: Delete a amenity
     """
     deleted_amenity = storage.get("Amenity", amenity_id)
     if deleted_amenity:
