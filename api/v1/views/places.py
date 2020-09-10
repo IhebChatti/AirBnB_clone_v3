@@ -11,10 +11,22 @@ from models.place import Place
                  methods=['GET'],
                  strict_slashes=False)
 def RetrieveAllPlaces(city_id=None):
-    """[RetrieveAllPlaces method]
-
-    Returns:
-        [json]: [list of all Place objects]
+    """GET /cities/:city_id/places
+    ---
+    parameters:
+      - name: city_id
+        in: path
+        type: string
+        required: true
+        default: all
+    definitions:
+      Places:
+        type: object
+    responses:
+      200:
+        description: A list of places by city
+        schema:
+          $ref: '#/definitions/Places'
     """
     city = storage.get("City", city_id)
     if city:
