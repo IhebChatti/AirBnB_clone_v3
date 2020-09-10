@@ -9,7 +9,23 @@ from flask import Flask, jsonify, abort, request
                  strict_slashes=False,
                  methods=['GET'])
 def render_cities_by_state(state_id):
-    """GET /states/:state_id/cities"""
+    """GET /states/:state_id/cities
+    ---
+    parameters:
+      - name: state_id
+        in: path
+        type: string
+        required: true
+        default: all
+    definitions:
+      Cities:
+        type: object
+    responses:
+      200:
+        description: A list of cities
+        schema:
+          $ref: '#/definitions/Cities'
+    """
     state = storage.get("State", state_id)
     if state:
         return jsonify([city.to_dict() for city in state.cities])
