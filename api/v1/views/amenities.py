@@ -30,12 +30,17 @@ def RetrieveAllAmenities():
 @app_views.route('/amenities/<amenity_id>', strict_slashes=False)
 def RetrieveAmenityObject(amenity_id):
     """[RetrieveAmenityObject method]
-
-    Args:
-        amenity_id ([str]): [amenity id]
-
-    Returns:
-        [json]: [json rep of amenity on success, 404 on failure]
+    ---
+    get:
+        parameters:
+          - name: amenity_id
+            in: path
+            type: string
+            required: true
+            default: all
+    responses:
+      200:
+        description: get an amenity
     """
     amenity_values = storage.all("Amenity").values()
     if amenity_id is not None:
@@ -59,7 +64,7 @@ def DeleteAmenity(amenity_id):
             default: all
     responses:
       200:
-        description: Delete a amenity
+        description: Delete an amenity
     """
     deleted_amenity = storage.get("Amenity", amenity_id)
     if deleted_amenity:
@@ -72,9 +77,27 @@ def DeleteAmenity(amenity_id):
 @app_views.route('/amenities', methods=['POST'], strict_slashes=False)
 def PostAmenity():
     """[post amenity method]
-
-    Returns:
-        [status/json]: [json file and 200 status on success, 400 on failure]
+    ---
+    post:
+        consumes:
+            - application/json
+        parameters:
+          - name: body
+            in: body
+            required:
+              - key
+              - value
+            default: ""
+        properties:
+              key:
+                type: string
+                description: Unique identifier representing a key
+              value:
+                type: string
+                description: Unique identifier representing a value
+    responses:
+      201:
+        description: post an amenity
     """
     req = request.get_json()
     if req is None:
@@ -93,12 +116,32 @@ def PostAmenity():
                  strict_slashes=False)
 def PutAmenity(amenity_id=None):
     """[PUT amenity method]
-
-    Args:
-        amenity_id ([str], optional): [amenity id]. Defaults to None.
-
-    Returns:
-        [status/json]: [json file and 200 status on success, 400 on failure]
+    ---
+    put:
+        consumes:
+            - application/json
+        parameters:
+          - name: body
+            in: body
+            required:
+              - key
+              - value
+            default: ""
+          - name: amenity_id
+            in: path
+            type: string
+            required: true
+            description: amenity id
+        properties:
+              key:
+                type: string
+                description: Unique identifier representing a key
+              value:
+                type: string
+                description: Unique identifier representing a value
+    responses:
+      201:
+        description: post an amenity
     """
     updated_amenity = storage.get("Amenity", amenity_id)
     if updated_amenity:
