@@ -8,17 +8,33 @@ from flask import Flask, jsonify
 
 @app_views.route('/status', strict_slashes=False)
 def status():
-    """[status route]
-
-    Returns:
-        [json]: [json status]
+    """GET /status
+    ---
+    definitions:
+      Status:
+        type: object
+    responses:
+      200:
+        description: render status
+        schema:
+          $ref: '#/definitions/Status'
     """
     return jsonify({"status": "OK"})
 
 
 @app_views.route('/stats', methods=['GET'], strict_slashes=False)
 def render_stats():
-    """Returns stats about classes"""
+    """GET /stats
+    ---
+    definitions:
+      Stats:
+        type: object
+    responses:
+      200:
+        description: render stats
+        schema:
+          $ref: '#/definitions/Stats'
+    """
     stats = {
       "amenities": storage.count('Amenity'),
       "cities": storage.count('City'),
