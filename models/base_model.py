@@ -70,9 +70,6 @@ class BaseModel:
         if "password" in new_dict:
             if getenv('HBNB_TYPE_STORAGE') == "db":
                 del new_dict['password']
-        else:
-            password = new_dict['password'].encode()
-            new_dict['password'] = hashlib.md5(password).hexdigest()
         if "_sa_instance_state" in new_dict:
             del new_dict["_sa_instance_state"]
         return new_dict
