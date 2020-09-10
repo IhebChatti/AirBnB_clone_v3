@@ -14,6 +14,7 @@ from models.place import Place
 from models.review import Review
 from models.state import State
 from models.user import User
+from models import storage
 import json
 import os
 import pep8
@@ -113,3 +114,25 @@ class TestFileStorage(unittest.TestCase):
         with open("file.json", "r") as f:
             js = f.read()
         self.assertEqual(json.loads(string), json.loads(js))
+
+
+class TestFileStorageGetAndCount(unittest.TestCase):
+    """Tests the newly added function"""
+    @classmethod
+    def setUpClass(cls):
+        cls.state = State(name="test_land", id="1111-2222-3333-4444")
+
+    def tearDownClass():
+        """Close storage instance"""
+        storage.close()
+        os.remove('file.json')
+
+    def test_get(self):
+        """Tests get"""
+        state = storage.get("State", "1111-2222-3333-4444")
+        self.assertIsInstance(state, State)
+
+    def test_count(self):
+        """Tests count"""
+        val = storage.count(State)
+        self.assertEqual(val, 1)
