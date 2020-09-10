@@ -14,10 +14,13 @@ from models.place import Place
 from models.review import Review
 from models.state import State
 from models.user import User
+from models import storage
 import json
 import os
 import pep8
 import unittest
+from sqlalchemy import create_engine
+from sqlalchemy.orm import scoped_session, sessionmaker
 DBStorage = db_storage.DBStorage
 classes = {"Amenity": Amenity, "City": City, "Place": Place,
            "Review": Review, "State": State, "User": User}
@@ -86,3 +89,25 @@ class TestFileStorage(unittest.TestCase):
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_save(self):
         """Test that save properly saves objects to file.json"""
+
+
+class TestDBStorageGetAndCount(unittest.TestCase):
+    """Tests the newly add fnction"""
+    @classmethod
+    def setUpClass(cls):
+        cls.state = State(name="test_land", id="1111-2222-3333-4444")
+        cls.state.save()
+
+    def tearDownClass():
+        """Close storage instance"""
+        storage.close()
+
+    def test_get(self):
+        """Tests get"""
+        state = storage.get("State", "1111-2222-3333-4444")
+        self.assertIsInstance(state, State)
+
+    def test_count(self):
+        """Tests count"""
+        val = storage.count(State)
+        self.assertEqual(val, 1)
