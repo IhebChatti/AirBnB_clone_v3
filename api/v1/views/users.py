@@ -30,12 +30,21 @@ def RetrieveAllUsers():
 @app_views.route('/users/<user_id>', strict_slashes=False)
 def RetrieveUserObject(user_id):
     """[RetrieveUserObject method]
-
-    Args:
-        user_id ([str]): [user id]
-
-    Returns:
-        [json]: [json rep of user on success, 404 on failure]
+    ---
+    parameters:
+      - name: user_id
+        in: path
+        type: string
+        required: true
+        default: all
+    definitions:
+      User:
+        type: object
+    responses:
+      200:
+        description: A user by ID
+        schema:
+          $ref: '#/definitions/User'
     """
     users_values = storage.all("User").values()
     if user_id is not None:
@@ -49,12 +58,17 @@ def RetrieveUserObject(user_id):
                  strict_slashes=False)
 def DeleteUser(user_id):
     """[delete request]
-
-    Args:
-        user_id ([str]): [user id]
-
-    Returns:
-        [json]: [200 on success or 404 status on failure]
+    ---
+    delete:
+        parameters:
+          - name: user_id
+            in: path
+            type: string
+            required: true
+            default: all
+    responses:
+      200:
+        description: Delete a user
     """
     deleted_user = storage.get("User", user_id)
     if deleted_user:
@@ -67,9 +81,27 @@ def DeleteUser(user_id):
 @app_views.route('/users', methods=['POST'], strict_slashes=False)
 def PostUser():
     """[post user method]
-
-    Returns:
-        [status/json]: [json file and 200 status on success, 400 on failure]
+    ---
+    post:
+        consumes:
+            - application/json
+        parameters:
+          - name: body
+            in: body
+            required:
+              - key
+              - value
+            default: ""
+        properties:
+              key:
+                type: string
+                description: Unique identifier representing a key
+              value:
+                type: string
+                description: Unique identifier representing a value
+    responses:
+      201:
+        description: post a user
     """
     req = request.get_json()
     if req is None:
@@ -88,12 +120,32 @@ def PostUser():
 @app_views.route('/users/<user_id>', methods=['PUT'], strict_slashes=False)
 def PutUser(user_id=None):
     """[PUT user method]
-
-    Args:
-        user_id ([str], optional): [user id]. Defaults to None.
-
-    Returns:
-        [status/json]: [json file and 200 status on success, 400 on failure]
+    ---
+    put:
+        consumes:
+            - application/json
+        parameters:
+          - name: body
+            in: body
+            required:
+              - key
+              - value
+            default: ""
+          - name: user_id
+            in: path
+            type: string
+            required: true
+            description: user id
+        properties:
+              key:
+                type: string
+                description: Unique identifier representing a key
+              value:
+                type: string
+                description: Unique identifier representing a value
+    responses:
+      201:
+        description: put a user
     """
     updated_user = storage.get("User", user_id)
     if updated_user:

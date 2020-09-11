@@ -141,7 +141,7 @@ def PutAmenity(amenity_id=None):
                 description: Unique identifier representing a value
     responses:
       201:
-        description: post an amenity
+        description: put an amenity
     """
     updated_amenity = storage.get("Amenity", amenity_id)
     if updated_amenity:

@@ -39,12 +39,21 @@ def RetrieveAllPlaces(city_id=None):
                  strict_slashes=False)
 def RetrievePlaceObject(place_id):
     """[RetrievePlaceObject method]
-
-    Args:
-        place_id ([str]): [place id]
-
-    Returns:
-        [json]: [json rep of place on success, 404 on failure]
+    ---
+    parameters:
+      - name: place_id
+        in: path
+        type: string
+        required: true
+        default: ""
+    definitions:
+      Place:
+        type: object
+    responses:
+      200:
+        description: A place by ID
+        schema:
+          $ref: '#/definitions/Place'
     """
     places_values = storage.all("Place").values()
     if place_id is not None:
@@ -59,12 +68,17 @@ def RetrievePlaceObject(place_id):
                  strict_slashes=False)
 def DeletePlace(place_id):
     """[delete request]
-
-    Args:
-        place_id ([str]): [place id]
-
-    Returns:
-        [json]: [200 on success or 404 status on failure]
+    ---
+    delete:
+        parameters:
+          - name: place_id
+            in: path
+            type: string
+            required: true
+            default: all
+    responses:
+      200:
+        description: Delete a place
     """
     deleted_place = storage.get("Place", place_id)
     if deleted_place:
@@ -79,9 +93,31 @@ def DeletePlace(place_id):
                  strict_slashes=False)
 def PostPlace(city_id):
     """[post place method]
-
-    Returns:
-        [status/json]: [json file and 200 status on success, 400 on failure]
+    ---
+    post:
+        consumes:
+            - application/json
+        parameters:
+          - name: body
+            in: body
+            required:
+              - key
+              - value
+            default: ""
+          - name: city_id
+            in: path
+            required: true
+            default: all
+        properties:
+              key:
+                type: string
+                description: Unique identifier representing a key
+              value:
+                type: string
+                description: Unique identifier representing a value
+    responses:
+      201:
+        description: post a place
     """
     from models.place import Place
     city = storage.get("City", city_id)
@@ -107,12 +143,32 @@ def PostPlace(city_id):
 @app_views.route('/places/<place_id>', methods=['PUT'], strict_slashes=False)
 def PutPlace(place_id=None):
     """[PUT place method]
-
-    Args:
-        place_id ([str], optional): [place id]. Defaults to None.
-
-    Returns:
-        [status/json]: [json file and 200 status on success, 400 on failure]
+    ---
+    put:
+        consumes:
+            - application/json
+        parameters:
+          - name: body
+            in: body
+            required:
+              - key
+              - value
+            default: ""
+          - name: place_id
+            in: path
+            type: string
+            required: true
+            description: place id
+        properties:
+              key:
+                type: string
+                description: Unique identifier representing a key
+              value:
+                type: string
+                description: Unique identifier representing a value
+    responses:
+      201:
+        description: put a place
     """
     updated_place = storage.get("Place", place_id)
     if updated_place:

@@ -81,9 +81,27 @@ def DeleteState(state_id):
 @app_views.route('/states', methods=['POST'], strict_slashes=False)
 def PostState():
     """[post state method]
-
-    Returns:
-        [status/json]: [json file and 200 status on success, 400 on failure]
+    ---
+    post:
+        consumes:
+            - application/json
+        parameters:
+          - name: body
+            in: body
+            required:
+              - key
+              - value
+            default: ""
+        properties:
+              key:
+                type: string
+                description: Unique identifier representing a key
+              value:
+                type: string
+                description: Unique identifier representing a value
+    responses:
+      201:
+        description: post a state
     """
     req = request.get_json()
     if req is None:
@@ -99,12 +117,32 @@ def PostState():
 @app_views.route('/states/<state_id>', methods=['PUT'], strict_slashes=False)
 def PutState(state_id=None):
     """[PUT state method]
-
-    Args:
-        state_id ([str], optional): [state id]. Defaults to None.
-
-    Returns:
-        [status/json]: [json file and 200 status on success, 400 on failure]
+    ---
+    put:
+        consumes:
+            - application/json
+        parameters:
+          - name: body
+            in: body
+            required:
+              - key
+              - value
+            default: ""
+          - name: state_id
+            in: path
+            type: string
+            required: true
+            description: state id
+        properties:
+              key:
+                type: string
+                description: Unique identifier representing a key
+              value:
+                type: string
+                description: Unique identifier representing a value
+    responses:
+      201:
+        description: put a state
     """
     updated_state = storage.get("State", state_id)
     if updated_state is None:

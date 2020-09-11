@@ -40,13 +40,22 @@ def GetAmenityOfPlace(place_id):
                  strict_slashes=False)
 def DeleteAmenityToPlace(place_id, amenity_id):
     """[DeleteAmenityToPlace]
-
-    Args:
-        place_id ([str]): [place id]
-        amenity_id ([str]): [amenity id]
-
-    Returns:
-        [json/status]: [json and status of response]
+    ---
+    delete:
+        parameters:
+          - name: place_id
+            in: path
+            type: string
+            required: true
+            default: all
+          - name: amenity_id
+            in: path
+            type: string
+            required: true
+            default: all
+    responses:
+      200:
+        description: Delete a place_amenity
     """
     place = storage.get("Place", place_id)
     amenity = storage.get("Amenity", amenity_id)
@@ -71,13 +80,35 @@ def DeleteAmenityToPlace(place_id, amenity_id):
                  strict_slashes=False)
 def AmenityToPlace(place_id, amenity_id):
     """[AmenityToPlace Method]
-
-    Args:
-        place_id ([str]): [place id]
-        amenity_id ([str]): [amenity id]
-
-    Returns:
-        [json/status]: [json file nad status of response]
+    ---
+    post:
+        consumes:
+            - application/json
+        parameters:
+          - name: body
+            in: body
+            required:
+              - key
+              - value
+            default: ""
+          - name: place_id
+            in: path
+            required: true
+            default: ""
+          - name: amenity_id
+            in: path
+            required: true
+            default: ""
+        properties:
+              key:
+                type: string
+                description: Unique identifier representing a key
+              value:
+                type: string
+                description: Unique identifier representing a value
+    responses:
+      201:
+        description: post a place_amenity
     """
     place = storage.get("Place", place_id)
     amenity = storage.get("Amenity", amenity_id)

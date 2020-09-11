@@ -36,7 +36,23 @@ def render_reviews_by_place(place_id):
                  strict_slashes=False,
                  methods=['GET'])
 def render_review_by_id(review_id):
-    """GET /reviews/:review_id"""
+    """[GET /reviews/:review_id]
+    ---
+    parameters:
+      - name: review_id
+        in: path
+        type: string
+        required: true
+        default: ""
+    definitions:
+      Review:
+        type: object
+    responses:
+      200:
+        description: A review by ID
+        schema:
+          $ref: '#/definitions/Review'
+    """
     review = storage.get("Review", review_id)
     if review:
         return jsonify(review.to_dict())
@@ -47,7 +63,19 @@ def render_review_by_id(review_id):
                  strict_slashes=False,
                  methods=['DELETE'])
 def delete_review_by_id(review_id):
-    """DELETE /reviews/:review_id"""
+    """[DELETE /reviews/:review_id]
+    ---
+    delete:
+        parameters:
+          - name: review_id
+            in: path
+            type: string
+            required: true
+            default: ""
+    responses:
+      200:
+        description: Delete a review
+    """
     review = storage.get("Review", review_id)
     if review:
         storage.delete(review)
@@ -60,7 +88,33 @@ def delete_review_by_id(review_id):
                  strict_slashes=False,
                  methods=['POST'])
 def create_review(place_id):
-    """POST /places/:place_id/reviews"""
+    """[POST /places/:place_id/reviews]
+    ---
+    post:
+        consumes:
+            - application/json
+        parameters:
+          - name: body
+            in: body
+            required:
+              - key
+              - value
+            default: ""
+          - name: place_id
+            in: path
+            required: true
+            default: ""
+        properties:
+              key:
+                type: string
+                description: Unique identifier representing a key
+              value:
+                type: string
+                description: Unique identifier representing a value
+    responses:
+      201:
+        description: post a review
+    """
     from models.review import Review
     place = storage.get("Place", place_id)
     if place:
@@ -86,7 +140,34 @@ def create_review(place_id):
                  methods=['PUT'],
                  strict_slashes=False)
 def update_review(review_id):
-    """PUT /reviews/:review_id"""
+    """[PUT /reviews/:review_id]
+    ---
+    put:
+        consumes:
+            - application/json
+        parameters:
+          - name: body
+            in: body
+            required:
+              - key
+              - value
+            default: ""
+          - name: review_id
+            in: path
+            type: string
+            required: true
+            description: review id
+        properties:
+              key:
+                type: string
+                description: Unique identifier representing a key
+              value:
+                type: string
+                description: Unique identifier representing a value
+    responses:
+      201:
+        description: put a review
+    """
     review = storage.get("Review", review_id)
     if review:
         content = request.get_json()
